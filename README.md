@@ -1,6 +1,6 @@
 # Chaotic Thermostat Dynamics: Van der Pol Oscillator and Martyna–Klein–Tuckerman (MKT) chaotic thermostat Thermostat
 
-Computational physics research (UCLA, advised by Prof. George Morales) on how a deterministic, low-dimensional system can reproduce statistical behavior (Gaussian/Maxwellian velocity distributions) and how to *quantify* when it is chaotic versus periodic.
+Computational plasma physics research (UCLA, advised by Prof. George Morales) on how a deterministic, low-dimensional system can reproduce statistical behavior (Gaussian/Maxwellian velocity distributions) and how to *quantify* when it is chaotic versus periodic.
 
 ## The question
 
