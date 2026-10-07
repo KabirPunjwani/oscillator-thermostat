@@ -27,7 +27,7 @@ I wanted to learn:
 
 ## Results
 
-For a detailed breakdown of the simulation outcomes, please view the [Findings Summary](./Findings_Summary.pdf).
+For a detailed breakdown of the simulation outcomes, please view the [Findings Summary](./VdP_MKT_Findings.pdf).
 
 ## Project structure
 
