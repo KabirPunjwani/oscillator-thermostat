@@ -1,14 +1,14 @@
-# Chaotic Thermostat Dynamics: Van der Pol Oscillator + MKT Thermostat
+# Chaotic Thermostat Dynamics: Van der Pol Oscillator and Martyna–Klein–Tuckerman (MKT) chaotic thermostat Thermostat
 
 Computational physics research (UCLA, advised by Prof. George Morales) on how a deterministic, low-dimensional system can reproduce statistical behavior (Gaussian/Maxwellian velocity distributions) and how to *quantify* when it is chaotic versus periodic.
 
 ## The question
 
-A Van der Pol-type oscillator is coupled to a chaotic thermostat (the MKT system) that supplies a fluctuating friction `Γ` and two phase variables `θ`, `φ`. The full system is six coupled ODEs in dimensionless form, with two main control parameters: the thermostat timescale `ω_τ` and the parameter `q`.
+A Van der Pol-type oscillator is coupled to a chaotic thermostat (the MKT system) that supplies a fluctuating friction `Γ` and two phase variables `θ`, `φ`. The full system is six coupled ODEs in dimensionless form, with three main control parameters: the thermostat timescale `ω_τ` and parameters `q` and `⍺`.
 
 I wanted to learn:
 1. Does the oscillator's velocity develop a Maxwellian (Gaussian) distribution despite the dynamics being fully deterministic?
-2. Can I tell chaotic from periodic regimes using data-driven diagnostics alone, and does that agree with an analytic prediction? (I derived a critical value `q_c = 1/ω_τ` for the transition.)
+2. Can I tell chaotic from periodic regimes using data-driven diagnostics alone, and does that agree with an analytic prediction? 
 
 ## Approach and why
 
@@ -23,12 +23,11 @@ I wanted to learn:
 
 - Tested the FFT pipeline on a known `sin(t)` signal to confirm peak location and amplitude normalization (`python main.py spectrum --diagnostic`).
 - Cross-checked the spectral timescale `τ_L` against an independent time-domain Lorentzian pulse-width estimate.
-- Checked numerical results against the analytic prediction `q_c = 1/ω_τ`.
 - Confirmed results are stable across initial conditions via the ensemble rather than relying on one run.
 
 ## Results
 
-[FILL IN 2-3 concrete findings with numbers, e.g. "Velocity distribution matches N(0,1) to within ___ ", "kurtosis converges to ___ (Gaussian = 3)".]
+For a detailed breakdown of the simulation outcomes, please view the [Findings Summary](./Findings_Summary.pdf).
 
 ## Project structure
 
