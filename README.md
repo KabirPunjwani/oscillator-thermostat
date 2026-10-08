@@ -4,8 +4,7 @@ Computational plasma physics research (UCLA, advised by Prof. George Morales) on
 
 ## The question
 
-A Van der Pol-type oscillator is coupled to a chaotic thermostat (the MKT system) that supplies a fluctuating friction `Γ` and two phase variables `θ`, `φ`. The full system is six coupled ODEs in dimensionless form, with three main control parameters: the thermostat timescale `ω_τ` and parameters `q` and `⍺`.
-
+A Van der Pol-type oscillator is coupled to a chaotic thermostat (the MKT system) that supplies a fluctuating friction `Γ` and two phase variables `θ`, `φ`. The full system is six coupled ODEs in dimensionless form with three free parameters: the thermostat timescale `ω_τ` (ratio of the oscillator period to the bath coupling time), the Van der Pol damping strength `α` (written μ in the findings summary), and the limit-cycle amplitude parameter `q` (written k in the summary). The phase-drive amplitude f₀ changes with `ω_τ`. 
 I wanted to learn:
 1. Does the oscillator's velocity develop a Maxwellian (Gaussian) distribution despite the dynamics being fully deterministic?
 2. Can I tell chaotic from periodic regimes using data-driven diagnostics alone, and does that agree with an analytic prediction? 
@@ -42,6 +41,7 @@ thermostat/
   distributions.py         ensemble histograms vs. ideal Gaussian
   spectral.py              Hann-windowed FFT, exponential / power-law fits, ensemble spectra
   lorentzian.py            time-domain Lorentzian pulse-width estimate of tau_L
+  tarnopolski.py           Abbe value vs turning-point fraction, with sine / noise / pure-VdP references
   time_averages.py         running time averages and running kurtosis
 ```
 
@@ -57,15 +57,16 @@ python main.py spectrum --diagnostic          # single-trajectory spectrum, FFT 
 python main.py running                        # running time averages of x^2, v^2, Gamma
 python main.py kurtosis                       # running kurtosis of the velocity
 python main.py lorentzian                     # Lorentzian pulse-width fit
+python main.py tarnopolski --variable xi --omega-tau 0.1 --alpha 15 --q 0.5   # Tarnopolski plane
 ```
 
 Parameters are flags (`--omega-tau`, `--q`, `--alpha`, `--f0`, `--t1`, `--dt`); `--save DIR` writes PNGs instead of opening windows. Full ensemble runs take a few minutes, so use a shorter run (e.g. `--t1 400`) for a quick look. Everything is also importable:
 
 ```python
-from thermostat import Params, integrate, ensemble_running_kurtosis_v
+from thermostat import Params, ensemble_running_kurtosis_v
 import numpy as np
 
-p = Params(omega_tau0=10, q=0.5)
+p = Params(omega_tau0=0.1, alpha=15, q=0.5)   # one of the six cases in the findings
 t, K, _, _ = ensemble_running_kurtosis_v(p, np.linspace(-5, 5, 21), show_plot=False)
 ```
 
