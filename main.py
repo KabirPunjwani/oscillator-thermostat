@@ -6,6 +6,7 @@ Examples
     python main.py trajectory --plot u
     python main.py histogram --save figures/
     python main.py fft --mode loglog
+    python main.py tarnopolski --variable xi --omega-tau 0.1 --alpha 15 --q 0.5
     python main.py kurtosis --t1 400          # shorter run for a quick look
 
 Run `python main.py <command> --help` for all options.
@@ -29,6 +30,7 @@ from thermostat import (
     phase_portrait,
     phase_portrait_gam_u,
     plot_ensemble_avg_with_ideal_gaussian,
+    plot_T_vs_A,
     plot_pulse_with_lorentzian_overlay,
     q_minus_gamma_plot,
     u_plot,
@@ -51,7 +53,8 @@ def build_parser():
     common.add_argument("--q", type=float, default=0.5, help="parameter q (default 0.5)")
     common.add_argument("--alpha", type=float, default=7.0, help="Van der Pol strength (default 7)")
     common.add_argument("--f0", type=float, default=0.2, help="phase-drive amplitude (default 0.2)")
-    common.add_argument("--t1", type=float, default=1200.0, help="end of integration in tau (default 1200)")
+    common.add_argument("--t0", type=float, help="start of integration in tau (default 0; 500 for tarnopolski)")
+    common.add_argument("--t1", type=float, help="end of integration in tau (default 1200; 2500 for tarnopolski)")
     common.add_argument("--dt", type=float, default=0.01, help="RK4 step (default 0.01)")
     common.add_argument("--save", metavar="DIR", help="save figures as PNGs in DIR instead of showing them")
 
@@ -83,12 +86,29 @@ def build_parser():
 
     lor = sub.add_parser("lorentzian", parents=[common], help="Lorentzian fit of a pulse in u(tau)")
     lor.add_argument("--window", type=float, default=20.0, help="width of the tau window around the pulse")
+
+    tar = sub.add_parser(
+        "tarnopolski",
+        parents=[common],
+        help="Tarnopolski plane (Abbe value vs turning-point fraction) vs sine / white noise / pure VdP",
+    )
+    tar.add_argument("--variable", default="u", choices=["xi", "u", "Gam", "beta", "th", "ph"])
+    tar.add_argument("--burn-frac", type=float, default=0.2, help="fraction of the run discarded as burn-in")
+    tar.add_argument("--mu", type=float, default=1.0, help="Van der Pol strength of the pure-VdP reference (default 1)")
+    tar.add_argument("--t-over-mu", action="store_true", help="plot T/mu_T (1.5 x tau) instead of tau")
     return parser
 
 
+# Integration window per command: (t0, t1). Tarnopolski uses a longer window, 500 to 2500.
+DEFAULT_WINDOW = {"tarnopolski": (500.0, 2500.0)}
+
+
 def run(args):
-    p = Params(omega_tau0=args.omega_tau, f0=args.f0, alpha=args.alpha, q=args.q, t1=args.t1, dt=args.dt)
     cmd = args.command
+    d0, d1 = DEFAULT_WINDOW.get(cmd, (0.0, 1200.0))
+    t0 = d0 if args.t0 is None else args.t0
+    t1 = d1 if args.t1 is None else args.t1
+    p = Params(omega_tau0=args.omega_tau, f0=args.f0, alpha=args.alpha, q=args.q, t0=t0, t1=t1, dt=args.dt)
 
     if cmd in ("trajectory", "spectrum", "lorentzian"):
         traj = integrate(p)
@@ -108,6 +128,10 @@ def run(args):
 
     if cmd == "lorentzian":
         plot_pulse_with_lorentzian_overlay(traj.tau, traj.u, p, window=args.window)
+        return
+
+    if cmd == "tarnopolski":
+        plot_T_vs_A(p, variable=args.variable, burn_frac=args.burn_frac, use_T_over_mu=args.t_over_mu, mu=args.mu)
         return
 
     # ensemble commands

@@ -20,9 +20,21 @@ from .plotting import (
 from .simulate import DEFAULT_Z0, Trajectory, evolve_batch, initial_batch, integrate, phase_grid
 from .spectral import ensemble_fft, ensemble_spectrum, fit_exponential, fit_power_law, fourier_transform, one_sided_spectrum
 from .system import rhs, rhs_batch
+from .tarnopolski import (
+    abbe_value,
+    plot_T_vs_A,
+    simulate_pure_vdp,
+    tarnopolski_path,
+    turning_point_fraction,
+)
 from .time_averages import ensemble_running_kurtosis_v, ensemble_running_time_averages_x2_v2
 
 __all__ = [
+    "abbe_value",
+    "plot_T_vs_A",
+    "simulate_pure_vdp",
+    "tarnopolski_path",
+    "turning_point_fraction",
     "DEFAULT_Z0",
     "STATE_COLUMNS",
     "Params",
